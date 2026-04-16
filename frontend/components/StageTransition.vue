@@ -34,11 +34,16 @@ const errorMsg = ref('')
 
 const advanceStage = async () => {
   if (!nextStage.value) return
+
+  // nextStage.value.key'i ÖNCE kaydet — updateStage çalıştıktan sonra
+  // Vue reactivity nextStage'i null yapabiliyor (status güncelleniyor → nextStage = null)
+  const targetStageKey = nextStage.value.key
+
   updating.value = true
   errorMsg.value = ''
   try {
-    await transactionsStore.updateStage(props.transactionId, nextStage.value.key)
-    emit('updated', nextStage.value.key)
+    await transactionsStore.updateStage(props.transactionId, targetStageKey)
+    emit('updated', targetStageKey)
   } catch (err: any) {
     errorMsg.value = err?.data?.message || 'Failed to advance stage'
   } finally {
