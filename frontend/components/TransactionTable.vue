@@ -173,8 +173,8 @@ const formatStatus = (status: string) => {
                 <div class="text-[10px] font-medium text-slate-400 mt-0.5">Solo — 50%</div>
               </template>
               <template v-else>
-                <div class="text-sm font-bold text-slate-800">{{ formatCurrency(t.listingAgentShare) }} ea.</div>
-                <div class="text-[10px] font-medium text-slate-400 mt-0.5">25/25 Split</div>
+                <div class="text-sm font-bold text-slate-800">{{ formatCurrency(t.listingAgentShare) }}</div>
+                <div class="text-[10px] font-medium text-slate-400 mt-0.5">25% / 25% per agent</div>
               </template>
             </td>
 
