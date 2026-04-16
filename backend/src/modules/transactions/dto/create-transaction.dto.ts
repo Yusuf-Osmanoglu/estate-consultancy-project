@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString, IsMongoId, IsEnum, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsMongoId, IsEnum, IsOptional, Min } from 'class-validator';
+import { TransactionStage } from './update-stage.dto';
 
 export class CreateTransactionDto {
   @IsString()
@@ -7,6 +8,7 @@ export class CreateTransactionDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   totalServiceFee: number;
 
   @IsMongoId()
@@ -17,7 +19,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   sellingAgent: string;
 
-  @IsEnum(['agreement', 'earnest_money', 'title_deed', 'completed'])
-  @IsOptional() // İsteğe bağlı olsun, göndermezsen default değer atanır
-  status?: string;
+  @IsEnum(TransactionStage)
+  @IsOptional()
+  status?: TransactionStage;
 }
