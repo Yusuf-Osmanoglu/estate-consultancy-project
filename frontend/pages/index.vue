@@ -1,75 +1,68 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Wallet, Building, ArrowUpRight, TrendingUp } from 'lucide-vue-next'
-import { useApi } from '~/composables/useApi'
+import { Wallet, Building, ArrowUpRight, Plus, TrendingUp } from 'lucide-vue-next'
+import { useTransactionsStore } from '~/stores/transactions'
 import KpiCard from '~/components/KpiCard.vue'
 import TransactionTable from '~/components/TransactionTable.vue'
 
-// Page metadata
 useHead({
-  title: 'Financial Transactions | Digital Estate',
+  title: 'Dashboard | Digital Estate',
 })
 
-// Fetch data
-const { fetcher } = useApi()
+const transactionsStore = useTransactionsStore()
 
-// We assume the API returns { data: Transaction[], total: number } or similar
-// For this example, let's say it just returns Transaction[] directly
-const { data: transactionsData, pending, error } = await fetcher<any>('/transactions')
+// Veriyi çek (Pinia Store üzerinden)
+await transactionsStore.fetchTransactions()
+await transactionsStore.fetchStats()
 
-// We process the data to ensure default properties
-const transactions = computed(() => {
-  // Eğer henüz veri yükleniyorsa veya hata varsa/veri yoksa boş array dön
-  if (pending.value || !transactionsData.value) return []
-  
-  // API array döndürüyorsa veya obje içerisindeki bir array alanındaysa (örn: res.data)
-  const rawData = Array.isArray(transactionsData.value) 
-    ? transactionsData.value 
-    : (transactionsData.value.data || [])
+const transactions = computed(() => transactionsStore.transactions)
+const stats = computed(() => transactionsStore.stats)
+const loading = computed(() => transactionsStore.loading)
 
-  // Validasyon: Gerçekten maplenebilecek bir array geldiğinden emin ol
-  if (!Array.isArray(rawData)) return []
+// Modal state
+const showCreateModal = ref(false)
 
-  return rawData.map((t: any) => ({
-    ...t,
-    // Provide sensible defaults for the UI demo based on the mock screenshot
-    status: t.status || 'completed',
-    commissionNote: t.commissionNote || 'Standard 50/50 broker split applied as per agreement.'
-  }))
-})
+const handleTransactionCreated = () => {
+  showCreateModal.value = false
+}
 </script>
 
 <template>
   <div class="space-y-8 animate-fade-in">
     <!-- Page Header -->
-    <header>
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 mb-1">Financial Transactions</h1>
-      <p class="text-sm font-medium text-slate-500">Detailed overview of residential and commercial commission disbursements.</p>
+    <header class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900 mb-1">Financial Transactions</h1>
+        <p class="text-sm font-medium text-slate-500">Detailed overview of residential and commercial commission disbursements.</p>
+      </div>
+      <button
+        @click="showCreateModal = true"
+        class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+      >
+        <Plus class="w-4 h-4" />
+        New Transaction
+      </button>
     </header>
 
-    <!-- Top KPI Cards -->
+    <!-- Top KPI Cards — Dinamik veriler -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Total Revenue -->
       <KpiCard 
         title="Total Revenue" 
-        value="$4,280,450" 
-        trend="+12.4% vs last quarter" 
+        :value="stats ? transactionsStore.formattedTotalRevenue : '—'" 
+        :trend="stats && stats.totalDeals > 0 ? `${stats.totalDeals} total deals` : ''" 
         :icon="Wallet" 
         iconBgColor="bg-indigo-50 text-indigo-500" 
       />
-      <!-- Net Company Profit -->
       <KpiCard 
         title="Net Company Profit" 
-        value="$241,250" 
-        subtitle="50% Margin fully reconciled" 
+        :value="stats ? transactionsStore.formattedCompanyProfit : '—'" 
+        subtitle="50% margin per company policy" 
         :icon="Building" 
         iconBgColor="bg-emerald-50 text-emerald-500" 
       />
-      <!-- Total Deals -->
       <KpiCard 
-        title="Total Deals" 
-        value="142" 
-        subtitle="24 pending closing" 
+        title="Deal Status" 
+        :value="stats ? `${stats.completedDeals} / ${stats.totalDeals}` : '—'" 
+        :subtitle="stats ? `${stats.pendingDeals} pending closing` : ''" 
         :icon="ArrowUpRight" 
         iconBgColor="bg-blue-50 text-blue-500" 
       />
@@ -77,7 +70,7 @@ const transactions = computed(() => {
 
     <!-- Ledger Table -->
     <section>
-      <TransactionTable :transactions="transactions" :loading="pending" />
+      <TransactionTable :transactions="transactions" :loading="loading" />
     </section>
 
     <!-- Bottom Section: Growth Projection & Agent Performance -->
@@ -97,7 +90,7 @@ const transactions = computed(() => {
         </div>
       </div>
 
-      <!-- Agent Performance -->
+      <!-- Completed Ratio -->
       <div class="bg-[#0F172A] rounded-xl p-8 flex flex-col justify-between text-white shadow-lg relative overflow-hidden">
         <div class="absolute -right-4 -top-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
         <div class="relative z-10">
@@ -106,24 +99,30 @@ const transactions = computed(() => {
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold mb-2">Agent Performance</h3>
+          <h3 class="text-lg font-bold mb-2">Completion Rate</h3>
           <p class="text-xs text-slate-400 leading-relaxed font-medium">
-            Sarah Jenkins has reached her <span class="text-white font-bold">Platinum Tier</span> bonus threshold this month.
+            <span class="text-white font-bold">{{ stats?.completedDeals || 0 }}</span> out of <span class="text-white font-bold">{{ stats?.totalDeals || 0 }}</span> transactions have reached completion stage.
           </p>
         </div>
         
         <div class="mt-8 relative z-10">
           <div class="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden">
-            <div class="h-full bg-emerald-400 rounded-full" style="width: 82%"></div>
+            <div 
+              class="h-full bg-emerald-400 rounded-full transition-all duration-700" 
+              :style="{ width: stats && stats.totalDeals > 0 ? `${(stats.completedDeals / stats.totalDeals * 100)}%` : '0%' }"
+            ></div>
           </div>
           <div class="flex justify-between items-center mt-2 text-[10px] font-bold text-slate-400 tracking-wider">
-            <span>PROGRESS</span>
-            <span>82%</span>
+            <span>COMPLETION</span>
+            <span>{{ stats && stats.totalDeals > 0 ? Math.round(stats.completedDeals / stats.totalDeals * 100) : 0 }}%</span>
           </div>
         </div>
       </div>
       
     </section>
+
+    <!-- Create Transaction Modal -->
+    <CreateTransactionModal v-if="showCreateModal" @close="handleTransactionCreated" />
 
   </div>
 </template>

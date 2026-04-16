@@ -2,12 +2,8 @@
 import { 
   Building2, 
   LayoutDashboard, 
-  Home, 
   BriefcaseBusiness, 
   Users, 
-  BarChart3, 
-  Settings, 
-  HelpCircle,
   Search,
   Bell,
   Mail
@@ -33,41 +29,35 @@ import {
       
       <!-- Navigation Menu -->
       <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto">
-        <NuxtLink to="/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
+        <NuxtLink 
+          to="/" 
+          class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors"
+          :class="$route.path === '/' ? 'bg-[#F0F4FF] text-blue-800 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'"
+        >
+          <div v-if="$route.path === '/'" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-700 rounded-r-md"></div>
           <LayoutDashboard class="w-4 h-4" />
           Dashboard
         </NuxtLink>
-        <NuxtLink to="/properties" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
-          <Home class="w-4 h-4" />
-          Properties
-        </NuxtLink>
-        <NuxtLink to="/transactions" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#F0F4FF] text-blue-800 font-medium text-sm relative transition-colors shadow-sm">
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-700 rounded-r-md"></div>
+        <NuxtLink 
+          to="/transactions" 
+          class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors relative"
+          :class="$route.path.startsWith('/transactions') ? 'bg-[#F0F4FF] text-blue-800 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'"
+        >
+          <div v-if="$route.path.startsWith('/transactions')" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-700 rounded-r-md"></div>
           <BriefcaseBusiness class="w-4 h-4" />
           Transactions
         </NuxtLink>
-        <NuxtLink to="/agents" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
+        <NuxtLink 
+          to="/agents" 
+          class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors relative"
+          :class="$route.path === '/agents' ? 'bg-[#F0F4FF] text-blue-800 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'"
+        >
+          <div v-if="$route.path === '/agents'" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-700 rounded-r-md"></div>
           <Users class="w-4 h-4" />
           Agents
         </NuxtLink>
-        <NuxtLink to="/reports" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
-          <BarChart3 class="w-4 h-4" />
-          Reports
-        </NuxtLink>
       </nav>
       
-      <!-- Bottom Links -->
-      <div class="px-4 mt-auto pt-6 border-t border-slate-100 space-y-1.5">
-        <NuxtLink to="/settings" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
-          <Settings class="w-4 h-4" />
-          Settings
-        </NuxtLink>
-        <NuxtLink to="/support" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors">
-          <HelpCircle class="w-4 h-4" />
-          Support
-        </NuxtLink>
-      </div>
-
     </aside>
 
     <!-- Main Content Area -->
@@ -127,7 +117,7 @@ import {
 </template>
 
 <style>
-/* Optional custom scrollbar styling */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -141,5 +131,9 @@ import {
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #94a3b8;
+}
+
+.nav-link {
+  position: relative;
 }
 </style>
