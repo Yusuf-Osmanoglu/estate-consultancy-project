@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: estate-consultancy-api
+    runtime: node
+    region: frankfurt
+    plan: free
+    rootDir: backend
+    buildCommand: pnpm install && pnpm run build
+    startCommand: pnpm run start:prod
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
