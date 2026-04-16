@@ -1,0 +1,4 @@
+yusufosmanoglu
+bbKsR7kp81z6l8gx
+
+MONGODB_URI=mongodb+srv://yusufosmanoglu:bbKsR7kp81z6l8gx@cluster0.yxbipwq.mongodb.net/estate_db?retryWrites=true&w=majority&appName=Cluster0
