@@ -1,23 +1,27 @@
-# Nuxt Minimal Starter
+# Frontend — Nuxt 3 Application
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Estate Consultancy Transaction Management frontend built with Nuxt 3, Pinia, and Tailwind CSS.
+
+## Features
+
+- **Nuxt 3** with composition API setup
+- **Pinia** for centralized state management (`transactions` and `agents` stores)
+- **Tailwind CSS** for responsive, modern UI styling
+- **Lucide Icons**
 
 ## Setup
 
-Make sure to install dependencies:
-
 ```bash
-# npm
-npm install
-
-# pnpm
+# Install dependencies
 pnpm install
+```
 
-# yarn
-yarn install
+## Environment Variables
 
-# bun
-bun install
+The frontend connects to the backend API. The base URL can be defined in `.env` (creates one if not exists). Defaults to `http://localhost:3001` locally.
+
+```env
+NUXT_PUBLIC_API_BASE=http://localhost:3001
 ```
 
 ## Development Server
@@ -25,51 +29,19 @@ bun install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+pnpm run dev
 ```
 
-## Production
-
-Build the application for production:
+## Production Build
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+pnpm run build
+pnpm run preview
 ```
 
-Locally preview production build:
+## Structure
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- `/components`: UI elements (Dashboard, Tables, Modals, Stage Stepper)
+- `/pages`: File-based routing (Dashboard, Transactions List, Detail Pages)
+- `/stores`: Pinia state management for cross-component data sharing
+- `/assets`: Static resources (Tailwind styles)
