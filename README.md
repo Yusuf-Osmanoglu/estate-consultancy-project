@@ -126,10 +126,13 @@ pnpm run test:watch     # Watch mode
   - **Same agent** (listing = selling): Gets 100% of agent share (50% of total)
   - **Different agents**: Each gets 50% of agent share (25% of total each)
 
-## Live URLs
+## 🚀 Live Demo & Deployment
 
-- **Backend API**: _To be deployed_
-- **Frontend**: _To be deployed_
+- **Frontend App**: [https://estate-consultancy-project.vercel.app](https://estate-consultancy-project.vercel.app)
+- **Backend API**: [https://estate-consultancy-project.onrender.com](https://estate-consultancy-project.onrender.com)
+
+> **⚠️ Note on Backend Sleep Time (Free Tier):**
+> The backend is deployed on a free instance of **Render.com**. Free instances automatically spin down after 15 minutes of inactivity. Therefore, **the very first request (such as opening the frontend dashboard) may take up to 50-60 seconds** as the backend server "wakes up". Please be patient on the first load. All subsequent requests will be instant.
 
 ## Author
 
